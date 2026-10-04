@@ -136,7 +136,6 @@ if uploaded_file:
             # =================================================
 
             if not result["success"]:
-
     st.expander("🔍 What the AI Read").json(
         result.get("prescription", {})
     )
@@ -146,23 +145,24 @@ if uploaded_file:
         "be reliably verified."
     )
 
-                warning = verification.get(
-                    "warning",
-                    "Some information is unclear."
-                )
+    verification = result.get("verification", {})
 
-                st.warning(
-                    warning
-                )
+    warning = verification.get(
+        "warning",
+        "Some information is unclear."
+    )
 
-                st.info(
-                    "Please upload a clearer prescription "
-                    "or confirm the unclear information "
-                    "with a doctor or pharmacist."
-                )
+    st.warning(warning)
 
-                st.stop()
+    st.info(
+        "Please upload a clearer prescription "
+        "or confirm the unclear information "
+        "with a doctor or pharmacist."
+    )
 
+    st.stop()
+
+                
 
             # =================================================
             # SUCCESS
