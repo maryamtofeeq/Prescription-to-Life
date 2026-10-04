@@ -78,7 +78,6 @@ if uploaded_file:
         width=600
     )
 
-
     if st.button(
         "🔍 Analyze Prescription",
         type="primary"
@@ -136,33 +135,43 @@ if uploaded_file:
             # =================================================
 
             if not result["success"]:
-    st.expander("🔍 What the AI Read").json(
-        result.get("prescription", {})
-    )
 
-    st.error(
-        "⚠️ The prescription could not "
-        "be reliably verified."
-    )
+                st.expander(
+                    "🔍 What the AI Read"
+                ).json(
+                    result.get(
+                        "prescription",
+                        {}
+                    )
+                )
 
-    verification = result.get("verification", {})
+                st.error(
+                    "⚠️ The prescription could not "
+                    "be reliably verified."
+                )
 
-    warning = verification.get(
-        "warning",
-        "Some information is unclear."
-    )
+                verification = result.get(
+                    "verification",
+                    {}
+                )
 
-    st.warning(warning)
+                warning = verification.get(
+                    "warning",
+                    "Some information is unclear."
+                )
 
-    st.info(
-        "Please upload a clearer prescription "
-        "or confirm the unclear information "
-        "with a doctor or pharmacist."
-    )
+                st.warning(
+                    warning
+                )
 
-    st.stop()
+                st.info(
+                    "Please upload a clearer prescription "
+                    "or confirm the unclear information "
+                    "with a doctor or pharmacist."
+                )
 
-                
+                st.stop()
+
 
             # =================================================
             # SUCCESS
@@ -199,6 +208,7 @@ if uploaded_file:
                     schedule
                 )
 
+
                 # Rename columns for friendly UI
 
                 df = df.rename(
@@ -213,6 +223,7 @@ if uploaded_file:
                         "duration": "Duration"
                     }
                 )
+
 
                 st.dataframe(
                     df,
@@ -293,4 +304,4 @@ if uploaded_file:
 
             st.code(
                 str(error)
-)
+            )
