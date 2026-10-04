@@ -59,7 +59,7 @@ def call_text_agent(client, prompt):
 
         temperature=0,
 
-        max_completion_tokens=1500,
+        max_completion_tokens=800,
 
         response_format={
             "type": "json_object"
