@@ -102,9 +102,11 @@ IMPORTANT:
 5. Never invent timing.
 6. Never correct the doctor's prescription.
 7. If something is unclear, write "UNCLEAR".
-8. If the prescription is generally unreadable, set
-   readable to false.
+8. Set readable to false ONLY if the prescription image
+is generally unreadable.
 
+If only one field is unclear, keep readable as true
+and mark only that specific field as "UNCLEAR".
 Return ONLY valid JSON:
 
 {
@@ -165,48 +167,57 @@ Return ONLY valid JSON:
 # AGENT 2
 # SAFETY / VERIFICATION AGENT
 # =========================================================
-
+    
 def verification_agent(client, prescription):
-
     prompt = f"""
 You are the Prescription Safety Verification Agent.
 
-Review this information extracted from a prescription:
+Review ONLY the information extracted from the prescription:
 
 {json.dumps(prescription, indent=2)}
 
-Your job is to identify uncertainty.
+Your job is to decide whether the information is reliable enough
+to create a medicine schedule.
 
-Rules:
+IMPORTANT SAFETY RULES:
 
-1. Never guess.
-2. Never add a medicine.
-3. Never change a medicine.
-4. Never change dosage.
-5. Never change frequency.
-6. Never change timing.
-7. If a medicine name is UNCLEAR, it must remain UNCLEAR.
-8. If dosage is UNCLEAR, it must remain UNCLEAR.
-9. If frequency is UNCLEAR, it must remain UNCLEAR.
-10. If timing is UNCLEAR, it must remain UNCLEAR.
+1. NEVER guess a medicine name.
+2. NEVER guess a dosage.
+3. NEVER guess a frequency.
+4. NEVER change the doctor's instructions.
+5. NEVER add a medicine.
+6. NEVER remove a medicine.
 
-If important information is unclear,
-safe_to_process must be false.
+BLOCK processing ONLY when one of these CORE fields is unclear:
 
-Return ONLY JSON:
+- medicine_name
+- dosage
+- frequency
+
+Timing and duration are NOT blocking fields.
+
+If timing is unclear:
+write "Not specified"
+
+If duration is unclear:
+write "Not specified"
+
+If all medicine names, dosages and frequencies are sufficiently
+readable, set safe_to_process to true.
+
+If any CORE field contains UNCLEAR, set safe_to_process to false.
+
+Return ONLY valid JSON:
 
 {{
     "safe_to_process": true,
     "warning": "",
+    "blocking_issues": [],
     "medicines": []
 }}
 """
 
-    return call_text_agent(
-        client,
-        prompt
-    )
-
+    return call_text_agent(client, prompt)
 
 # =========================================================
 # AGENT 3
