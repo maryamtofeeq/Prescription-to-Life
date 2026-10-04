@@ -137,15 +137,14 @@ if uploaded_file:
 
             if not result["success"]:
 
-                st.error(
-                    "⚠️ The prescription could not "
-                    "be reliably verified."
-                )
+    st.expander("🔍 What the AI Read").json(
+        result.get("prescription", {})
+    )
 
-                verification = result.get(
-                    "verification",
-                    {}
-                )
+    st.error(
+        "⚠️ The prescription could not "
+        "be reliably verified."
+    )
 
                 warning = verification.get(
                     "warning",
